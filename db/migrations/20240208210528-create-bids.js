@@ -16,7 +16,7 @@ module.exports = {
           key: "id",
         },
       },
-      buyer_id: {
+      bidder_id: {
         type: Sequelize.INTEGER,
         references: {
           model: "users",

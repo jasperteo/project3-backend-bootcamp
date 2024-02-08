@@ -16,17 +16,18 @@ module.exports = {
           key: "id",
         },
       },
-      fav_brand: {
-        type: Sequelize.STRING,
+      watch_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "watches",
+          key: "id",
+        },
       },
-      fav_model: {
-        type: Sequelize.STRING,
-      },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE,
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE,
       },

@@ -1,20 +1,20 @@
+"use strict";
 const BaseController = require("./baseController");
 
 class ListingsController extends BaseController {
-  constructor(model, userModel, watchModel) {
+  constructor(model, bidsModel) {
     super(model);
-    this.userModel = userModel;
-    this.watchModel = watchModel;
+    this.bidsModel = bidsModel;
   }
 
   /** if a method in this extended class AND the base class has the same name, the one in the extended class will run over the base method */
-  // Create listing. Requires authentication.
+
   async insertOne(req, res) {
     const {
       title,
       description,
       imageLink,
-      sellerId,
+      userId,
       watchId,
       startingBid,
       buyoutPrice,
@@ -26,31 +26,56 @@ class ListingsController extends BaseController {
       const newListing = await this.model.create({
         title: title,
         description: description,
-        imageLink: imageLink,
-        sellerId: sellerId,
-        buyerId: null,
-        watchId: watchId,
-        startingBid: startingBid,
-        buyoutPrice: buyoutPrice,
+        image_link: imageLink,
+        seller_id: userId,
+        buyer_id: null,
+        watch_id: watchId,
+        starting_bid: startingBid,
+        buyout_price: buyoutPrice,
         status: true,
-        endingAt: new Date(endingAt),
+        ending_at: new Date(endingAt),
       });
 
       // Respond with new listing
       return res.json(newListing);
-    } catch (err) {
-      return res.status(400).json({ error: true, msg: err });
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error.message });
     }
   }
 
-  // Retrieve specific listing. No authentication required.
   async getOne(req, res) {
     const { listingId } = req.params;
     try {
       const output = await this.model.findByPk(listingId);
       return res.json(output);
-    } catch (err) {
-      return res.status(400).json({ error: true, msg: err });
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error.message });
+    }
+  }
+
+  async closeOne(req, res) {
+    const { listingId } = req.params;
+    const { buyerId } = req.body;
+    try {
+      const data = await this.model.findByPk(listingId);
+      await data.update({ buyer_id: buyerId, status: false });
+      return res.json(data);
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error.message });
+    }
+  }
+
+  async updateBid(req, res) {
+    const { listingId } = req.params;
+    const { currentBid, userId } = req.body;
+    try {
+      const [bid] = await this.bidsModel.findOrCreate({
+        where: { listing_id: listingId, bidder_id: userId },
+      });
+      await bid.update({ current_bid: currentBid });
+      return res.json(bid);
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error.message });
     }
   }
 }

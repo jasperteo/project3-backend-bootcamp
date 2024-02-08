@@ -1,3 +1,4 @@
+"use strict";
 class BaseController {
   constructor(model) {
     this.model = model;
@@ -7,11 +8,10 @@ class BaseController {
 
   async getAll(req, res) {
     try {
-      console.log("hello!");
       const output = await this.model.findAll();
       return res.json(output);
-    } catch (err) {
-      return res.status(400).json({ error: true, msg: err });
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error.message });
     }
   }
 }

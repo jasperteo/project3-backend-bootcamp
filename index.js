@@ -1,3 +1,4 @@
+"use strict";
 const express = require("express");
 const cors = require("cors");
 const { auth } = require("express-oauth2-jwt-bearer");
@@ -10,14 +11,18 @@ const app = express();
 // const io = require("socket.io")(server);
 
 // importing Routers
+const UsersRouter = require("./routers/usersRouter");
+const WatchesRouter = require("./routers/watchesRouter");
 const ListingsRouter = require("./routers/listingsRouter");
 
 // importing Controllers
+const UsersController = require("./controllers/usersController");
+const WatchesController = require("./controllers/watchesController");
 const ListingsController = require("./controllers/listingsController");
 
 // importing DB
 const db = require("./db/models/index");
-const { listing, user, watches } = db;
+const { listings, users, watches, historic_prices, bids } = db;
 
 //Auth0 JWT middleware
 const checkJwt = auth({
@@ -26,20 +31,22 @@ const checkJwt = auth({
 });
 
 // initializing Controllers -> note the lowercase for the first word
-const listingsController = new ListingsController(listing, user, watches);
+const usersController = new UsersController(users, watches);
+const watchesController = new WatchesController(watches, historic_prices);
+const listingsController = new ListingsController(listings, bids);
 
 // inittializing Routers
+const usersRouter = new UsersRouter(usersController, checkJwt).routes();
+const watchesRouter = new WatchesRouter(watchesController, checkJwt).routes();
 const listingsRouter = new ListingsRouter(
   listingsController,
   checkJwt
 ).routes();
 
-app.get("/", (req, res) => {
-  res.send("Hello, World!");
-});
-
 app.use(cors());
 app.use(express.json());
+app.use("/users", usersRouter);
+app.use("/watches", watchesRouter);
 app.use("/listings", listingsRouter);
 
 app.listen(PORT, () => {
