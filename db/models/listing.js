@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class listings extends Model {
+  class Listing extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -9,39 +9,39 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsToMany(models.users, { through: "bids" });
+      this.belongsToMany(models.user, { through: "bids" });
       this.belongsTo(models.user, { as: "buyer", foreignKey: "buyer_id" });
       this.belongsTo(models.user, { as: "seller", foreignKey: "seller_id" });
-      this.belongsTo(models.watches, { as: "watch", foreignKey: "watch_id" });
+      this.belongsTo(models.watch, { as: "watch", foreignKey: "watch_id" });
     }
   }
-  listings.init(
+  Listing.init(
     {
       title: DataTypes.STRING,
       description: DataTypes.TEXT,
-      image_link: DataTypes.STRING,
-      seller_id: {
+      imageLink: DataTypes.STRING,
+      sellerId: {
         type: DataTypes.INTEGER,
         references: { model: "users", key: "id" },
       },
-      buyer_id: {
+      buyerId: {
         type: DataTypes.INTEGER,
         references: { model: "users", key: "id" },
       },
-      watch_id: {
+      watchId: {
         type: DataTypes.INTEGER,
         references: { model: "watches", key: "id" },
       },
-      starting_bid: DataTypes.INTEGER,
-      buyout_price: DataTypes.INTEGER,
+      startingBid: DataTypes.INTEGER,
+      buyoutPrice: DataTypes.INTEGER,
       status: DataTypes.BOOLEAN,
-      ending_at: DataTypes.DATE,
+      endingAt: DataTypes.DATE,
     },
     {
       sequelize,
-      modelName: "listings",
+      modelName: "listing",
       underscored: true,
     }
   );
-  return listings;
+  return Listing;
 };

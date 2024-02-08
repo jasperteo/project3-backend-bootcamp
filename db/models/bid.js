@@ -1,38 +1,33 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class bids extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+  class Bid extends Model {
     static associate(models) {
       // define association here
       this.belongsTo(models.user, { as: "buyer", foreignKey: "buyer_id" });
-      this.belongsTo(models.listings, {
+      this.belongsTo(models.listing, {
         as: "listing",
         foreignKey: "listing_id",
       });
     }
   }
-  bids.init(
+  Bid.init(
     {
-      listing_id: {
+      listingId: {
         type: DataTypes.INTEGER,
         references: { model: "listings", key: "id" },
       },
-      buyer_id: {
+      buyerId: {
         type: DataTypes.INTEGER,
         references: { model: "users", key: "id" },
       },
-      current_bid: DataTypes.INTEGER,
+      currentBid: DataTypes.INTEGER,
     },
     {
       sequelize,
-      modelName: "bids",
+      modelName: "bid",
       underscored: true,
     }
   );
-  return bids;
+  return Bid;
 };

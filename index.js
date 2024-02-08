@@ -17,7 +17,7 @@ const ListingsController = require("./controllers/listingsController");
 
 // importing DB
 const db = require("./db/models/index");
-const { listing, user } = db;
+const { listing, user, watches } = db;
 
 //Auth0 JWT middleware
 const checkJwt = auth({
@@ -26,7 +26,7 @@ const checkJwt = auth({
 });
 
 // initializing Controllers -> note the lowercase for the first word
-const listingsController = new ListingsController(listing, user);
+const listingsController = new ListingsController(listing, user, watches);
 
 // inittializing Routers
 const listingsRouter = new ListingsRouter(
