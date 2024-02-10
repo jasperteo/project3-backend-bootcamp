@@ -15,8 +15,7 @@ class UsersController extends BaseController {
       const [user] = await this.model.findOrCreate({
         where: { email: userEmail },
       });
-      const output = await this.model.findByPk(user.id);
-      return res.json(output);
+      return res.json(user);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error.message });
     }
@@ -48,6 +47,17 @@ class UsersController extends BaseController {
       return res.status(400).json({ error: true, msg: error.message });
     }
   }
-}
 
+  async getLikes(req, res) {
+    const { userId } = req.params;
+    try {
+      const data = await this.model.findByPk(userId, {
+        include: this.watchesModel,
+      });
+      return res.json(data);
+    } catch (err) {
+      return res.status(400).json({ error: true, msg: err });
+    }
+  }
+}
 module.exports = UsersController;

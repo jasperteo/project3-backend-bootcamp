@@ -12,6 +12,10 @@ class UsersRouter {
     router.get("/", this.controller.getAll.bind(this.controller));
     router.get("/:userEmail", this.controller.getOne.bind(this.controller));
     router.put("/:userId", this.controller.updateOne.bind(this.controller));
+    router.get(
+      "/:userId/wishlist",
+      this.controller.getLikes.bind(this.controller)
+    );
     router.put(
       "/:userId/wishlist",
       this.controller.likeWatch.bind(this.controller)
