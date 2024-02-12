@@ -2,9 +2,10 @@
 const BaseController = require("./baseController");
 
 class ListingsController extends BaseController {
-  constructor(model, bidsModel) {
+  constructor(model, bidsModel, watchesModel) {
     super(model);
     this.bidsModel = bidsModel;
+    this.watchesModel = watchesModel;
   }
 
   /** if a method in this extended class AND the base class has the same name, the one in the extended class will run over the base method */
@@ -42,11 +43,23 @@ class ListingsController extends BaseController {
       return res.status(400).json({ error: true, msg: error.message });
     }
   }
+  async getAll(req, res) {
+    try {
+      const output = await this.model.findAll({
+        include: this.watchesModel,
+      });
+      return res.json(output);
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error.message });
+    }
+  }
 
   async getOne(req, res) {
     const { listingId } = req.params;
     try {
-      const output = await this.model.findByPk(listingId);
+      const output = await this.model.findByPk(listingId, {
+        include: this.watchesModel,
+      });
       return res.json(output);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error.message });

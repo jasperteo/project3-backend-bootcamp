@@ -33,7 +33,7 @@ const checkJwt = auth({
 // initializing Controllers -> note the lowercase for the first word
 const usersController = new UsersController(users, watches);
 const watchesController = new WatchesController(watches, historic_prices);
-const listingsController = new ListingsController(listings, bids);
+const listingsController = new ListingsController(listings, bids, watches);
 
 // inittializing Routers
 const usersRouter = new UsersRouter(usersController, checkJwt).routes();

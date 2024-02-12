@@ -27,6 +27,24 @@ module.exports = {
           created_at: new Date(),
           updated_at: new Date(),
         },
+        {
+          username: "terryxi",
+          email: "1414@1414.com",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          username: "jesschen",
+          email: "111@111.com",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          username: "sherrywang",
+          email: "222@222.com",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
       ],
       {}
     );
