@@ -17,6 +17,7 @@ class ListingsRouter {
       "/:listingId/bid",
       this.controller.updateBid.bind(this.controller)
     );
+    router.get("/:listingId/bid", this.controller.getBid.bind(this.controller));
     return router;
   }
 }

@@ -6,9 +6,8 @@ const { auth } = require("express-oauth2-jwt-bearer");
 require("dotenv").config();
 
 const PORT = process.env.PORT;
+const SOCKET_PORT = process.env.SOCKET_PORT;
 const app = express();
-// const server = require("http").createServer(app);
-// const io = require("socket.io")(server);
 
 // importing Routers
 const UsersRouter = require("./routers/usersRouter");
@@ -49,10 +48,24 @@ app.use("/users", usersRouter);
 app.use("/watches", watchesRouter);
 app.use("/listings", listingsRouter);
 
-app.listen(PORT, () => {
-  console.log(`Express app listening on port ${PORT}!`);
+app.listen(PORT, () => console.log(`Express app listening on port ${PORT}!`));
+
+//Socket IO with express and node
+const server = require("node:http").createServer(app);
+const io = require("socket.io")(server);
+
+io.on("connection", (socket) => {
+  console.log("user connected");
+  socket.on("disconnect", () => console.log("user disconnected"));
+  socket.on("joinRoom", (listingId) => {
+    socket.join(listingId);
+    console.log(`user join room ${listingId}`);
+  });
+  socket.on("submitBid", (data) =>
+    io.to(data.listingId).emit("newBid", data.currentBid)
+  );
 });
 
-// server.listen(PORT, () => {
-//   console.log(`Express app listening on port ${PORT}!`);
-// });
+server.listen(SOCKET_PORT, () =>
+  console.log(`Socket server listening on port 3001!`)
+);

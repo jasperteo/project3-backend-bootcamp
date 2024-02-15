@@ -8,8 +8,8 @@ class BaseController {
 
   async getAll(req, res) {
     try {
-      const output = await this.model.findAll();
-      return res.json(output);
+      const data = await this.model.findAll();
+      return res.json(data);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error.message });
     }

@@ -45,10 +45,10 @@ class ListingsController extends BaseController {
   }
   async getAll(req, res) {
     try {
-      const output = await this.model.findAll({
+      const data = await this.model.findAll({
         include: this.watchesModel,
       });
-      return res.json(output);
+      return res.json(data);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error.message });
     }
@@ -57,10 +57,10 @@ class ListingsController extends BaseController {
   async getOne(req, res) {
     const { listingId } = req.params;
     try {
-      const output = await this.model.findByPk(listingId, {
+      const data = await this.model.findByPk(listingId, {
         include: this.watchesModel,
       });
-      return res.json(output);
+      return res.json(data);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error.message });
     }
@@ -87,6 +87,19 @@ class ListingsController extends BaseController {
       });
       await bid.update({ current_bid: currentBid });
       return res.json(bid);
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error.message });
+    }
+  }
+
+  async getBid(req, res) {
+    const { listingId } = req.params;
+    try {
+      const data = await this.bidsModel.findOne({
+        where: { listing_id: listingId },
+        order: [["current_bid", "DESC"]],
+      });
+      return res.json(data);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error.message });
     }

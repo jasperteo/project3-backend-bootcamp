@@ -9,8 +9,8 @@ class WatchesController extends BaseController {
   async getOne(req, res) {
     const { watchId } = req.params;
     try {
-      const output = await this.model.findByPk(watchId);
-      return res.json(output);
+      const data = await this.model.findByPk(watchId);
+      return res.json(data);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error.message });
     }
@@ -35,10 +35,11 @@ class WatchesController extends BaseController {
   async getByWatchId(req, res) {
     const { watchId } = req.params;
     try {
-      const output = await this.historicPricesModel.findAll({
+      const data = await this.historicPricesModel.findAll({
         where: { watch_id: watchId },
+        order: [["transacted_at", "ASC"]],
       });
-      return res.json(output);
+      return res.json(data);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error.message });
     }
