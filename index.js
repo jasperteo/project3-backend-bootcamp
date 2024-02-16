@@ -20,6 +20,7 @@ const WatchesController = require("./controllers/watchesController");
 const ListingsController = require("./controllers/listingsController");
 
 // importing DB
+const { Sequelize } = require("sequelize");
 const db = require("./db/models/index");
 const { listings, users, watches, historic_prices, bids } = db;
 
@@ -69,3 +70,20 @@ io.on("connection", (socket) => {
 server.listen(SOCKET_PORT, () =>
   console.log(`Socket server listening on port 3001!`)
 );
+
+//Automatically close listing when time ends
+const checkListingEnd = async () => {
+  try {
+    const currentTime = new Date();
+    const data = await listings.findAll({
+      where: { ending_at: { [Sequelize.Op.lte]: currentTime }, status: true },
+    });
+    await Promise.all(
+      data.map((endedListing) => endedListing.update({ status: false }))
+    );
+    console.log("Closed listing!");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+setInterval(checkListingEnd, 30000);
