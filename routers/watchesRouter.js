@@ -9,14 +9,24 @@ class WatchesRouter {
   }
   routes() {
     // we will insert routes into here later on
-    router.get("/", this.controller.getAll.bind(this.controller));
-    router.get("/:watchId", this.controller.getOne.bind(this.controller));
+    router.get(
+      "/",
+      this.checkJwt,
+      this.controller.getAll.bind(this.controller)
+    );
+    router.get(
+      "/:watchId",
+      this.checkJwt,
+      this.controller.getOne.bind(this.controller)
+    );
     router.get(
       "/:watchId/historicPrices",
+      this.checkJwt,
       this.controller.getByWatchId.bind(this.controller)
     );
     router.post(
       "/:watchId/historicPrices",
+      this.checkJwt,
       this.controller.insertHistoricPrice.bind(this.controller)
     );
 
