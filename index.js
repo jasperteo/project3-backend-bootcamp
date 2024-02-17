@@ -68,7 +68,7 @@ io.on("connection", (socket) => {
 });
 
 server.listen(SOCKET_PORT, () =>
-  console.log(`Socket server listening on port 3001!`)
+  console.log(`Socket server listening on port ${SOCKET_PORT}!`)
 );
 
 //Automatically close listing when time ends
@@ -81,9 +81,59 @@ const checkListingEnd = async () => {
     await Promise.all(
       data.map((endedListing) => endedListing.update({ status: false }))
     );
-    console.log("Closed listing!");
   } catch (error) {
     console.log(error.message);
   }
 };
 setInterval(checkListingEnd, 30000);
+
+//Set Up Stripe Checkout
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const CLIENT_URL = process.env.CLIENT_URL;
+
+app.post("/buyout", async (req, res) => {
+  const { listingId, watchName } = req.body;
+  const data = await listings.findByPk(listingId);
+  const price = Number(data.buyout_price) * 100;
+  const session = await stripe.checkout.sessions.create({
+    line_items: [
+      {
+        price_data: {
+          currency: "sgd",
+          unit_amount: price,
+          product_data: { name: watchName },
+        },
+        quantity: 1,
+      },
+    ],
+    mode: "payment",
+    success_url: `${CLIENT_URL}/listings/payment`,
+    cancel_url: `${CLIENT_URL}/listings/${listingId}`,
+  });
+  return res.json({ url: session.url });
+});
+
+app.post("/closeBid", async (req, res) => {
+  const { listingId, watchName } = req.body;
+  const data = await bids.findOne({
+    where: { listing_id: listingId },
+    order: [["current_bid", "DESC"]],
+  });
+  const price = Number(data.current_bid) * 100;
+  const session = await stripe.checkout.sessions.create({
+    line_items: [
+      {
+        price_data: {
+          currency: "sgd",
+          unit_amount: price,
+          product_data: { name: watchName },
+        },
+        quantity: 1,
+      },
+    ],
+    mode: "payment",
+    success_url: `http://localhost:5173/listings/payment`,
+    cancel_url: `http://localhost:5173/listings/${listingId}`,
+  });
+  return res.json({ url: session.url });
+});

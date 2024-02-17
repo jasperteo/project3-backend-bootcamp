@@ -9,16 +9,8 @@ class UsersRouter {
   }
   routes() {
     // we will insert routes into here later on
-    router.get(
-      "/",
-      this.checkJwt,
-      this.controller.getAll.bind(this.controller)
-    );
-    router.get(
-      "/:userEmail",
-      this.checkJwt,
-      this.controller.getOne.bind(this.controller)
-    );
+    router.get("/", this.controller.getAll.bind(this.controller));
+    router.get("/:userEmail", this.controller.getOne.bind(this.controller));
     router.put(
       "/:userId",
       this.checkJwt,
@@ -26,12 +18,10 @@ class UsersRouter {
     );
     router.get(
       "/:userId/wishlist",
-      this.checkJwt,
       this.controller.getLikes.bind(this.controller)
     );
     router.put(
       "/:userId/wishlist",
-      this.checkJwt,
       this.controller.likeWatch.bind(this.controller)
     );
     return router;
