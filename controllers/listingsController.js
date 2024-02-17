@@ -46,6 +46,10 @@ class ListingsController extends BaseController {
   async getAll(req, res) {
     try {
       const data = await this.model.findAll({
+        order: [
+          ["status", "DESC"],
+          ["ending_at", "ASC"],
+        ],
         include: this.watchesModel,
       });
       return res.json(data);

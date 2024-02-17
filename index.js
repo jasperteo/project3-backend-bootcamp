@@ -107,7 +107,7 @@ app.post("/buyout", async (req, res) => {
       },
     ],
     mode: "payment",
-    success_url: `${CLIENT_URL}/payment`,
+    success_url: `${CLIENT_URL}/payment/${listingId}`,
     cancel_url: `${CLIENT_URL}/listings/${listingId}`,
   });
   return res.json({ url: session.url });
@@ -132,8 +132,8 @@ app.post("/closeBid", async (req, res) => {
       },
     ],
     mode: "payment",
-    success_url: `http://localhost:5173/payment`,
-    cancel_url: `http://localhost:5173/listings/${listingId}`,
+    success_url: `${CLIENT_URL}/payment/${listingId}`,
+    cancel_url: `${CLIENT_URL}/listings/${listingId}`,
   });
   return res.json({ url: session.url });
 });
