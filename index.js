@@ -5,8 +5,7 @@ const { auth } = require("express-oauth2-jwt-bearer");
 
 require("dotenv").config();
 
-const PORT = process.env.PORT;
-const SOCKET_PORT = process.env.SOCKET_PORT;
+const PORT = process.env.PORT || 3000;
 const app = express();
 
 // importing Routers
@@ -35,7 +34,7 @@ const usersController = new UsersController(users, watches);
 const watchesController = new WatchesController(watches, historic_prices);
 const listingsController = new ListingsController(listings, bids, watches);
 
-// inittializing Routers
+// initializing Routers
 const usersRouter = new UsersRouter(usersController, checkJwt).routes();
 const watchesRouter = new WatchesRouter(watchesController, checkJwt).routes();
 const listingsRouter = new ListingsRouter(
@@ -48,8 +47,6 @@ app.use(express.json());
 app.use("/users", usersRouter);
 app.use("/watches", watchesRouter);
 app.use("/listings", listingsRouter);
-
-app.listen(PORT, () => console.log(`Express app listening on port ${PORT}!`));
 
 //Socket IO with express and node
 const server = require("node:http").createServer(app);
@@ -67,8 +64,8 @@ io.on("connection", (socket) => {
   );
 });
 
-server.listen(SOCKET_PORT, () =>
-  console.log(`Socket server listening on port ${SOCKET_PORT}!`)
+server.listen(PORT, () =>
+  console.log(`Express app listening on port ${PORT}!`)
 );
 
 //Automatically close listing when time ends
