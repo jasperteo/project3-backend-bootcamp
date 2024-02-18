@@ -8,6 +8,7 @@ require("dotenv").config();
 const PORT = process.env.PORT;
 const SOCKET_PORT = process.env.SOCKET_PORT;
 const app = express();
+app.use(cors());
 
 // importing Routers
 const UsersRouter = require("./routers/usersRouter");
@@ -43,7 +44,6 @@ const listingsRouter = new ListingsRouter(
   checkJwt
 ).routes();
 
-app.use(cors());
 app.use(express.json());
 app.use("/users", usersRouter);
 app.use("/watches", watchesRouter);
