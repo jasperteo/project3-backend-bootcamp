@@ -9,7 +9,7 @@ primary_region = 'sin'
 [build]
 
 [deploy]
-  release_command = 'sh ./release.sh'
+  # release_command = 'sh ./release.sh'
 
 [env]
   CLIENT_URL = 'https://watch-outt.netlify.app'
