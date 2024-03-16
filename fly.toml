@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for watch-out on 2024-02-19T04:24:42+08:00
+# fly.toml app configuration file generated for watch-out on 2024-03-16T17:43:18+08:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -9,17 +9,17 @@ primary_region = 'sin'
 [build]
 
 [deploy]
-  # release_command = 'sh ./release.sh'
+  # release_command = "sh ./release.sh"
 
 [env]
-  CLIENT_URL = 'https://watch-outt.netlify.app'
-  DATABASE = 'watch-out'
-  DIALECT = 'postgres'
-  HOST = 'watch-out-db.internal'
-  NODE_ENV = 'production'
-  PASSWORD = 'iUnEXHYvLflxJTE'
-  PORT = '3000'
-  USERNAME = 'postgres'
+  PORT = "3000"
+  USERNAME = "postgres"
+  DATABASE = "watch-out-db"
+  HOST = "watch-out-db.internal"
+  DIALECT = "postgres"
+  NODE_ENV = "production"
+  CLIENT_URL="https://watch-outt.netlify.app"
+
 
 # [http_service]
 #   internal_port = 3000
@@ -32,9 +32,9 @@ primary_region = 'sin'
 [[services]]
   protocol = 'tcp'
   internal_port = 3000
-  auto_stop_machines = false
+  auto_stop_machines = true
   auto_start_machines = true
-  min_machines_running = 1
+  min_machines_running = 0
 
 [[services.ports]]
     port = 80

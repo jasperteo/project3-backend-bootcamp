@@ -82,7 +82,7 @@ const checkListingEnd = async () => {
     console.log(error.message);
   }
 };
-setInterval(checkListingEnd, 10000);
+setInterval(checkListingEnd, 60000);
 
 //Set Up Stripe Checkout
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
