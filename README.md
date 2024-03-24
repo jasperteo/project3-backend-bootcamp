@@ -1,3 +1,9 @@
-# Rocket Academy Coding Bootcamp: Project 3 Backend
+# Watch Out!
 
-Run `npm i` to install NPM packages, then `npm start` to start the Express server.
+An app to list watches for sale with a bidding system included!
+
+## 
+
+[Frontend](https://github.com/jasperteo/watch-out-frontend)
+
+The backend is a Node.js server with Express.js as the framework. It connects to a Postgres database using sequelize as the ORM. It handles bidding via socket.io and payments using Stripe.
